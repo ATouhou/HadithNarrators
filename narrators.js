@@ -45,12 +45,13 @@ function update(source) {
    var nodeEnter = node.enter().append("g")
        .attr("class", "node")
        .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-       .on("click", click);
+       .on("click", click)
+       .on("dblclick", dblClick);
 
   nodeEnter.append("circle")
       .attr("r", 1e-6)
       .style("fill", function(d) { //return d._children ? "#ccff99"/*green*/ : "#fff"/*white*/; 
-                                      if(d.children2){
+                                      if(d.twoChildren){
                                         return "#ccff99";
                                       }
                                       else if(d._children){
@@ -87,7 +88,7 @@ function update(source) {
   nodeUpdate.select("circle")
       .attr("r", 10)
       .style("fill", function(d) { //return d._children ? "#9AA7FF" : "#fff"; 
-                                      if(d.children2){
+                                      if(d.twoChildren){
                                         return "#ccff99";
                                       }
                                       else if(d._children){
@@ -155,15 +156,15 @@ function click(d) {
   //   d.children = d._children;
   //   d._children = null;
   // }
-  if(d.children2){ //display only 2 children when first clicked
+  if(d.twoChildren){ //display only 2 children when first clicked
     d.children = d._children;
     d._children = null;
-    d.children2 = null;
+    d.twoChildren = null;
   }
   else if(d._children){//display all children
     if(d._children.length > 2){
-      d.children2 = d._children.slice(0, 2);
-      d.children = d.children2;
+      d.twoChildren = d._children.slice(0, 2);
+      d.children = d.twoChildren;
     }
     else{
       d.children = d._children;
@@ -178,6 +179,20 @@ function click(d) {
   update(d);
 }
 
+function dblClick(d){
+  //
+  if(d._children){ //if hidden partially or fully, open fully
+    d.children = d._children;
+    d._children = null;
+    d.twoChildren = null;
+  }
+  else{
+    d._children = d.children;
+    d.children = null;
+    d.twoChildren = null;
+  }
+update(d);
+}
 
 
 
