@@ -1,4 +1,4 @@
-// training.js
+// narrators.js
 
 var margin = {top: 20, right: 120, bottom: 20, left:100},
     width = 950 - margin.right - margin.left,
@@ -50,16 +50,8 @@ function update(source) {
 
   nodeEnter.append("circle")
       .attr("r", 1e-6)
-      .style("fill", function(d) { //return d._children ? "#ccff99"/*green*/ : "#fff"/*white*/; 
-                                      if(d.twoChildren){
-                                        return "#ccff99";
-                                      }
-                                      else if(d._children){
-                                        return "#9AA7FF";
-                                      }
-                                      else{
-                                        return "#fff";
-                                      }
+      .style("fill", function(d) { return d._children ? "#ccff99"/*green*/ : "#fff"/*white*/; 
+                                      
     });
 
   nodeEnter.append("text")
@@ -87,16 +79,8 @@ function update(source) {
 
   nodeUpdate.select("circle")
       .attr("r", 10)
-      .style("fill", function(d) { //return d._children ? "#9AA7FF" : "#fff"; 
-                                      if(d.twoChildren){
-                                        return "#ccff99";
-                                      }
-                                      else if(d._children){
-                                        return "#9AA7FF";
-                                      }
-                                      else{
-                                        return "#fff";
-                                      }
+      .style("fill", function(d) { return d._children ? "#9AA7FF" : "#fff"; 
+                                      
                                   });
 
   nodeUpdate.select("text")
@@ -149,32 +133,14 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
-  // if (d.children) { //children are curently visable
-  //   d._children = d.children;
-  //   d.children = null;
-  // } else {//children are not visable
-  //   d.children = d._children;
-  //   d._children = null;
-  // }
-  if(d.twoChildren){ //display only 2 children when first clicked
+  if (d.children) { //children are curently visable
+    d._children = d.children;
+    d.children = null;
+  } else {//children are not visable
     d.children = d._children;
     d._children = null;
-    d.twoChildren = null;
   }
-  else if(d._children){//display all children
-    if(d._children.length > 2){
-      d.twoChildren = d._children.slice(0, 2);
-      d.children = d.twoChildren;
-    }
-    else{
-      d.children = d._children;
-     d._children = null;
-    }
-  }
-  else{//hide all children
-    d._children = d.children;
-     d.children = null;
-  }
+
 
   update(d);
 }
